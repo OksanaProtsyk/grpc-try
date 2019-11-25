@@ -1,0 +1,64 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.learn.grpc.compute";
+
+
+service ComputeService {
+    rpc createServer (CreateServerRequest) returns (Server);
+    rpc migrateServer (MigrateServerRequest) returns (MigrateServerResponse);
+    rpc rebootServer (RebootServerRequest) returns (RebootServerResponse);
+    rpc listServers (GetServersRequest) returns (ServersList);
+    rpc serverStatusNotifications (GetServerStatus) returns (stream ServerStatusResponse);
+}
+
+enum ServerStatus {
+    RUNNING = 0;
+    STOPED = 1;
+    ERROR = 2;
+    SHUTDOWN = 3;
+    SUSPENDED = 4;
+}
+message Server {
+    int64 id = 1;
+    string accessIP = 2;
+    string serverName = 3;
+    int64 cpu = 4;
+    string host = 5;
+    ServerStatus status = 6;
+}
+
+message CreateServerRequest {
+    Server server = 1;
+}
+
+message RebootServerRequest {
+    //TODO
+}
+
+message RebootServerResponse {
+    //TODO
+}
+
+message GetServersRequest {
+    //TODO
+
+}
+message MigrateServerRequest {
+    //TODO
+
+}
+message MigrateServerResponse {
+    //TODO
+
+}
+message ServersList {
+    repeated Server server = 1;
+}
+
+message GetServerStatus {
+    Server server = 1;
+}
+
+message ServerStatusResponse {
+    ServerStatus status = 1;
+}
