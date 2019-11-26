@@ -22,7 +22,7 @@ message Server {
     int64 id = 1;
     string accessIP = 2;
     string serverName = 3;
-    int64 cpu = 4;
+    int32 cpu = 4;
     string host = 5;
     ServerStatus status = 6;
 }
