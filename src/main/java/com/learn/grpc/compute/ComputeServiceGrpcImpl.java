@@ -2,6 +2,7 @@ package com.learn.grpc.compute;
 
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.grpc.server.GrpcService;
@@ -29,6 +30,7 @@ public class ComputeServiceGrpcImpl extends ComputeServiceGrpc.ComputeServiceImp
     }
 
     @Override
+    @SneakyThrows
     public void rebootServer(RebootServerRequest request, StreamObserver<RebootServerResponse> responseObserver) {
         Long serverId = request.getServerId();
         Optional<ServerEntity> res = serverRepository.findById(serverId);
@@ -47,11 +49,8 @@ public class ComputeServiceGrpcImpl extends ComputeServiceGrpc.ComputeServiceImp
         serverRepository.save(serverEntity);
         log.info("Server with id {} has stopped", serverEntity.getId());
 
-        try {
-            Thread.sleep(2000); // on purpose delay
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Thread.sleep(2000); // on purpose delay
+
         serverEntity.setStatus(ServerStatus.RUNNING);
         log.info("Server with id {} has started", serverEntity.getId());
         serverRepository.save(serverEntity);
