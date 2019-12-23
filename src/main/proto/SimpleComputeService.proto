@@ -7,6 +7,7 @@ service ComputeService {
     rpc createServer (CreateServerRequest) returns (Server);
     rpc rebootServer (RebootServerRequest) returns (RebootServerResponse);
     rpc listServers (GetServersRequest) returns (ServersList);
+    rpc listServersStreaming (GetServersRequest) returns (stream Server);
     rpc subscribeForServerStatusNotifications (GetServerStatus) returns (stream ServerStatusResponse);
 }
 
@@ -42,7 +43,7 @@ message GetServersRequest {
 }
 
 message ServersList {
-    repeated Server server = 1;
+    repeated Server servers = 1;
 }
 
 message GetServerStatus {
