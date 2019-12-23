@@ -13,9 +13,9 @@ public class GrpcClient {
                 .build();
 
         HelloServiceGrpc.HelloServiceBlockingStub stub = HelloServiceGrpc.newBlockingStub(channel);
-        HelloResponse response = stub.hello(HelloRequest.newBuilder().setFirstName("Oksana").setLastName("Protsyk").build());
+        HelloResponse response = stub.hello(HelloRequest.newBuilder().setFirstName("Test").setLastName("Testing").build());
 
-        System.out.println("OLOLO "+ response.getGreeting());
+        System.out.println(" Welcome, "+ response.getGreeting());
         channel.shutdown();
     }
 }

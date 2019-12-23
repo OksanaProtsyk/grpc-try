@@ -8,12 +8,12 @@ service ComputeService {
     rpc migrateServer (MigrateServerRequest) returns (MigrateServerResponse);
     rpc rebootServer (RebootServerRequest) returns (RebootServerResponse);
     rpc listServers (GetServersRequest) returns (ServersList);
-    rpc serverStatusNotifications (GetServerStatus) returns (stream ServerStatusResponse);
+    rpc subscribeForServerStatusNotifications (GetServerStatus) returns (stream ServerStatusResponse);
 }
 
 enum ServerStatus {
     RUNNING = 0;
-    STOPED = 1;
+    STOPPED = 1;
     ERROR = 2;
     SHUTDOWN = 3;
     SUSPENDED = 4;
