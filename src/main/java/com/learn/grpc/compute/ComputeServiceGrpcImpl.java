@@ -24,4 +24,11 @@ public class ComputeServiceGrpcImpl extends ComputeServiceGrpc.ComputeServiceImp
         responseObserver.onNext(serverEntity.toProto());
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void rebootServer(RebootServerRequest request, StreamObserver<RebootServerResponse> responseObserver) {
+        //TODO implement
+
+
+    }
 }

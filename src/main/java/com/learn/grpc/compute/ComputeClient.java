@@ -10,7 +10,7 @@ public class ComputeClient {
                 .usePlaintext()
                 .build();
 
-        ComputeServiceGrpc.ComputeServiceBlockingStub stub = ComputeServiceGrpc.newBlockingStub(channel);
+        ComputeServiceGrpc.ComputeServiceBlockingStub blockingStub = ComputeServiceGrpc.newBlockingStub(channel);
 
 
         Server serverToCreate = Server.newBuilder()
@@ -20,11 +20,17 @@ public class ComputeClient {
                 .setAccessIP("192.168.0.1")
                 .setHost("ololo")
                 .build();
-        Server createdServerResponse = stub.createServer(CreateServerRequest.newBuilder()
+        Server createdServerResponse = blockingStub.createServer(CreateServerRequest.newBuilder()
                 .setServer(serverToCreate)
                 .build());
 
         System.out.println("OLOLO "+ createdServerResponse.toString());
+
+        //TODO subscribe for server status
+        ComputeServiceGrpc.ComputeServiceFutureStub nonBlockingStub = ComputeServiceGrpc.newFutureStub(channel);
+
+        nonBlockingStub.rebootServer(RebootServerRequest.newBuilder().build());
+
         channel.shutdown();
     }
 }

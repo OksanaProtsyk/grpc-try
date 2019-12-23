@@ -5,7 +5,6 @@ option java_package = "com.learn.grpc.compute";
 
 service ComputeService {
     rpc createServer (CreateServerRequest) returns (Server);
-    rpc migrateServer (MigrateServerRequest) returns (MigrateServerResponse);
     rpc rebootServer (RebootServerRequest) returns (RebootServerResponse);
     rpc listServers (GetServersRequest) returns (ServersList);
     rpc subscribeForServerStatusNotifications (GetServerStatus) returns (stream ServerStatusResponse);
@@ -15,9 +14,8 @@ enum ServerStatus {
     RUNNING = 0;
     STOPPED = 1;
     ERROR = 2;
-    SHUTDOWN = 3;
-    SUSPENDED = 4;
 }
+
 message Server {
     int64 id = 1;
     string accessIP = 2;
@@ -32,31 +30,23 @@ message CreateServerRequest {
 }
 
 message RebootServerRequest {
-    //TODO
+    int64 serverId = 1;
 }
 
 message RebootServerResponse {
-    //TODO
+    Server server = 1;
 }
 
 message GetServersRequest {
-    //TODO
-
+    ServersList servers = 1;
 }
-message MigrateServerRequest {
-    //TODO
 
-}
-message MigrateServerResponse {
-    //TODO
-
-}
 message ServersList {
     repeated Server server = 1;
 }
 
 message GetServerStatus {
-    Server server = 1;
+    int64 serverId = 1;
 }
 
 message ServerStatusResponse {
