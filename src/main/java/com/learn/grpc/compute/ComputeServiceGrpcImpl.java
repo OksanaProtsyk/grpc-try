@@ -14,13 +14,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+
 @GrpcService
 @Slf4j
 public class ComputeServiceGrpcImpl extends ComputeServiceGrpc.ComputeServiceImplBase {
 
     @Autowired
     ServerRepository serverRepository;
-
 
     @Override
     public void createServer(CreateServerRequest request, StreamObserver<Server> responseObserver) {
@@ -66,17 +67,7 @@ public class ComputeServiceGrpcImpl extends ComputeServiceGrpc.ComputeServiceImp
     }
 
     @Override
-    public void listServers(GetServersRequest getServersRequest, StreamObserver<ServersList> responseObserver) {
-
-        List<Server> servers = new ArrayList<>();
-        serverRepository.findAll().forEach(entity -> servers.add(entity.toProto()));
-        responseObserver.onNext(ServersList.newBuilder().addAllServers(servers).build());
-        responseObserver.onCompleted();
-    }
-
-
-    @Override
-    public void listServersStreaming(GetServersRequest getServersRequest, StreamObserver<Server> responseObserver) {
+    public void listServers(GetServersRequest getServersRequest, StreamObserver<Server> responseObserver) {
 
         serverRepository.findAll().forEach(entity -> responseObserver.onNext(entity.toProto())
         );
@@ -107,5 +98,49 @@ public class ComputeServiceGrpcImpl extends ComputeServiceGrpc.ComputeServiceImp
             responseObserver.onNext(ServerStatusResponse.newBuilder().setStatus(serverEntity.toProto().getStatus()).build());
         }, 0, 10, TimeUnit.SECONDS);
 
+    }
+
+    @Override
+    public StreamObserver<CreateServerRequest> createServerBulk(StreamObserver<CreateServerBulkResponse> responseObserver) {
+        return new StreamObserver<CreateServerRequest>() {
+            int serverCount;
+            long startTime = System.nanoTime();
+            List<Server> createdServers = new ArrayList<>();
+
+            @Override
+            public void onNext(CreateServerRequest createServerRequest) {
+                long serverId = createServerRequest.getServer().getId();
+                if (serverId > 0) {
+                    Optional<ServerEntity> res = serverRepository.findById(createServerRequest.getServer().getId());
+                    ServerEntity serverEntity = null;
+
+                    if (res.isPresent()) {
+                        serverEntity = res.get();
+                        log.info("Server with id {} already exists", serverId);
+                        return;
+                    }
+                }
+                serverCount++;
+                ServerEntity serverEntity = serverRepository.save(ServerEntity.fromProto(createServerRequest.getServer()));
+                createdServers.add(serverEntity.toProto());
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                log.warn("Some error occurred", t);
+            }
+
+            @Override
+            public void onCompleted() {
+                long seconds = NANOSECONDS.toSeconds(System.nanoTime() - startTime);
+                responseObserver.onNext(CreateServerBulkResponse.newBuilder()
+                        .setNumberOfServers(serverCount)
+                        .addAllServers(createdServers)
+                        .setElapsedSec(seconds)
+                        .build());
+                responseObserver.onCompleted();
+            }
+        };
     }
 }

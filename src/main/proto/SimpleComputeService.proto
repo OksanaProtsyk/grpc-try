@@ -6,9 +6,9 @@ option java_package = "com.learn.grpc.compute";
 service ComputeService {
     rpc createServer (CreateServerRequest) returns (Server);
     rpc rebootServer (RebootServerRequest) returns (RebootServerResponse);
-    rpc listServers (GetServersRequest) returns (ServersList);
-    rpc listServersStreaming (GetServersRequest) returns (stream Server);
+    rpc listServers (GetServersRequest) returns (stream Server);
     rpc subscribeForServerStatusNotifications (GetServerStatus) returns (stream ServerStatusResponse);
+    rpc createServerBulk(stream CreateServerRequest) returns (CreateServerBulkResponse);
 }
 
 enum ServerStatus {
@@ -42,14 +42,16 @@ message GetServersRequest {
     //TODO add some filters here
 }
 
-message ServersList {
-    repeated Server servers = 1;
-}
-
 message GetServerStatus {
     int64 serverId = 1;
 }
 
 message ServerStatusResponse {
     ServerStatus status = 1;
+}
+
+message CreateServerBulkResponse {
+    int64 numberOfServers = 1;
+    repeated Server servers = 2;
+    int64 elapsedSec = 3;
 }
