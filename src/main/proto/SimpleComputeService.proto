@@ -38,7 +38,7 @@ message RebootServerResponse {
 }
 
 message GetServersRequest {
-    ServersList servers = 1;
+    //TODO add some filters here
 }
 
 message ServersList {
