@@ -2,9 +2,6 @@ package com.learn.grpc;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import com.learn.grpc.HelloServiceGrpc;
-import com.learn.grpc.HelloRequest;
-import com.learn.grpc.HelloResponse;
 
 public class GrpcClient {
     public static void main(String[] args) {
