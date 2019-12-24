@@ -1,6 +1,7 @@
 syntax = "proto3";
 option java_multiple_files = true;
 package com.learn.grpc;
+import "google/protobuf/timestamp.proto";
 
 message HelloRequest {
     string firstName = 1;
@@ -14,4 +15,15 @@ message HelloResponse {
 
 service HelloService {
     rpc hello(HelloRequest) returns (HelloResponse);
+    rpc chat(stream ChatMessage) returns (stream ChatMessageFromServer);
+}
+
+message ChatMessage {
+    string from = 1;
+    string message = 2;
+}
+
+message ChatMessageFromServer {
+    google.protobuf.Timestamp timestamp = 1;
+    ChatMessage message = 2;
 }

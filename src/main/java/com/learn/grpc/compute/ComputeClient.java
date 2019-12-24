@@ -31,7 +31,6 @@ public class ComputeClient {
         bulkCreateServers(channel, 5);
 
         listAllServers(channel);
-        //TODO subscribe for server status
 
         rebootExistingService(channel, createdServerResponse);
 

@@ -39,7 +39,7 @@ message RebootServerResponse {
 }
 
 message GetServersRequest {
-    //TODO add some filters here
+    // add some filters here
 }
 
 message GetServerStatus {
