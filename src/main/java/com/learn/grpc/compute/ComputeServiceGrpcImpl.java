@@ -53,7 +53,7 @@ public class ComputeServiceGrpcImpl extends ComputeServiceGrpc.ComputeServiceImp
         serverRepository.save(serverEntity);
         log.info("Server with id {} has stopped", serverEntity.getId());
 
-        Thread.sleep(2000); // on purpose delay
+        Thread.sleep(10000); // on purpose delay
 
         serverEntity.setStatus(ServerStatus.RUNNING);
         log.info("Server with id {} has started", serverEntity.getId());
@@ -94,7 +94,7 @@ public class ComputeServiceGrpcImpl extends ComputeServiceGrpc.ComputeServiceImp
                 return;
             }
             responseObserver.onNext(ServerStatusResponse.newBuilder().setStatus(serverEntity.toProto().getStatus()).build());
-        }, 0, 10, TimeUnit.SECONDS);
+        }, 0, 5, TimeUnit.SECONDS);
 
     }
 

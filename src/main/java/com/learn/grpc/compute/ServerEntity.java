@@ -11,7 +11,6 @@ import javax.persistence.Id;
 @Data
 public class ServerEntity {
     @Id
-    @GeneratedValue
     Long id;
     String accessIP;
     String serverName;
