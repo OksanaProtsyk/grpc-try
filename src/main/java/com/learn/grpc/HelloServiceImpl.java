@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class HellloServiceImpl extends HelloServiceGrpc.HelloServiceImplBase {
+public class HelloServiceImpl extends HelloServiceGrpc.HelloServiceImplBase {
 
     private static Set<StreamObserver<ChatMessageFromServer>> observers = new HashSet<>();
 

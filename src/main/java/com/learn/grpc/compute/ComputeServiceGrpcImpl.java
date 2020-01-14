@@ -26,8 +26,6 @@ public class ComputeServiceGrpcImpl extends ComputeServiceGrpc.ComputeServiceImp
     @Override
     public void createServer(CreateServerRequest request, StreamObserver<Server> responseObserver) {
 
-        //TODO add fields validation
-
         ServerEntity serverEntity = ServerEntity.fromProto(request.getServer());
         serverEntity = serverRepository.save(serverEntity);
         log.info("Server with id {} was created", serverEntity.getId());
