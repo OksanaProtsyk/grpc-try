@@ -47,6 +47,7 @@ public class HelloServiceImpl extends HelloServiceGrpc.HelloServiceImplBase {
 
             @Override
             public void onError(Throwable t) {
+                observers.remove(responseObserver);
                 log.error("Server error occurred", t);
             }
 
