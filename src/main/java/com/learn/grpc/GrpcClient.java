@@ -2,13 +2,21 @@ package com.learn.grpc;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class GrpcClient {
+
+    private final ManagedChannel channel;
+    private final HelloServiceGrpc.HelloServiceBlockingStub blockingStub;
+
     public static void main(String[] args) {
 
         Map<String, Object> retryPolicy = new HashMap<>();
@@ -37,4 +45,34 @@ public class GrpcClient {
         System.out.println(" Welcome, " + response.getGreeting());
         channel.shutdown();
     }
+
+    public GrpcClient(String host, int port) {
+        this(ManagedChannelBuilder.forAddress(host, port)
+                .usePlaintext()
+                .build());
+    }
+
+    public GrpcClient(ManagedChannel channel) {
+        this.channel = channel;
+        blockingStub = HelloServiceGrpc.newBlockingStub(channel);
+    }
+
+    public void shutdown() throws InterruptedException {
+        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+    }
+
+    public void sayHello(String firstName, String lastName) {
+        log.info("Trying to say hello to " + firstName + " " + lastName + "...");
+        HelloRequest request = HelloRequest.newBuilder().setFirstName(firstName).setLastName(lastName).build();
+        HelloResponse response;
+        try {
+            response = blockingStub.hello(request);
+        } catch (StatusRuntimeException e) {
+            log.warn("Something went wrong: {}", e.getStatus());
+            return;
+        }
+        log.info("Greeting: " + response.getGreeting());
+    }
 }
+
+
